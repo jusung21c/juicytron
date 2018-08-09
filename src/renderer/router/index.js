@@ -7,8 +7,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'welcome-view',
-      component: require('@/components/WelcomeView').default,
+      name: 'home',
+      component: require('@/components/Home').default,
     },
     {
       path: '/programmanager',
