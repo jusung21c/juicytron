@@ -8,6 +8,7 @@
                     persistent-hint
                     prepend-icon="map"
                     v-if="checkLanglist"
+                    @change="selectedLangDefi"
             >
             </v-autocomplete>
         </v-flex>

@@ -30,6 +30,7 @@
                         v-bind:label="`${selectedlang} - ${selecteddefi}`"
                         @modifiedText="getModifiedPBody"
                         v-if="selectedprocedure"
+                        style="text-align: left;"
                 ></ProcTextArea>
                 <ConfirmModal
                         v-bind:procdata="procdata"
@@ -166,8 +167,13 @@
         this.procdata = this.getData(inputpath);
       },
       getSelectedLangDefi(selectedlang, selecteddefi) {
+        if (this.selectedlang !== selectedlang && this.selecteddefi === selecteddefi) {
+          this.selecteddefi = '';
+          this.selectedprocedure = '';
+        }
         this.selectedlang = selectedlang;
         this.selecteddefi = selecteddefi;
+        this.selectedprocedure = '';
       },
       getSelectedProcedure(selectedprocedure) {
         this.selectedprocedure = selectedprocedure;

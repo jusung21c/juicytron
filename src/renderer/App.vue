@@ -107,4 +107,13 @@
 <style>
   @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons');
   /* Global CSS */
+  .v-footer{
+    z-index: 5;
+  }
+  .v-toolbar{
+    z-index: 5;
+  }
+  .v-navigation-drawer{
+    z-index:6;
+  }
 </style>
