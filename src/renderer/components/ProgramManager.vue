@@ -167,19 +167,20 @@
         this.procdata = this.getData(inputpath);
       },
       getSelectedLangDefi(selectedlang, selecteddefi) {
-        if (this.selectedlang !== selectedlang && this.selecteddefi === selecteddefi) {
+        if (this.selecteddefi !== '' && this.selectedlang !== selectedlang) {
+          console.log('발생');
           this.selecteddefi = '';
           this.selectedprocedure = '';
+        } else {
+          this.selectedlang = selectedlang;
+          this.selecteddefi = selecteddefi;
+          this.selectedprocedure = '';
         }
-        this.selectedlang = selectedlang;
-        this.selecteddefi = selecteddefi;
-        this.selectedprocedure = '';
       },
       getSelectedProcedure(selectedprocedure) {
         this.selectedprocedure = selectedprocedure;
       },
       getModifiedPBody(modifiedText) {
-        console.log(`modifiedText : \n${modifiedText}`);
         this.selectedpbody = modifiedText;
       },
       getSelectedTargetLangs(selectedtargetlangs) {
