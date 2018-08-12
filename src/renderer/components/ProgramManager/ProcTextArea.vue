@@ -10,6 +10,8 @@
   import 'codemirror/lib/codemirror.css';
   import 'codemirror/mode/javascript/javascript.js';
   import 'codemirror/theme/base16-dark.css';
+  import 'codemirror/lib/codemirror';
+  require('codemirror/mode/javascript/javascript');
 
   export default {
     name: 'TextArea',
@@ -23,13 +25,14 @@
         cmOptions: {
           styleActiveLine: true,
           tabSize: 4,
-          mode: 'javascript',
           theme: 'base16-dark',
           lineNumbers: true,
           line: true,
           autofocus: true,
           showCursorWhenSelecting: true,
           lineWrapping: true,
+          mode: 'javascript',
+
         },
       };
     },

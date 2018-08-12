@@ -2,28 +2,40 @@
     <v-container grid-list-xl text-xs-center>
         <v-layout row wrap>
             <v-flex xs8 offset-xs2>
+                <p>{{selectedlang}}</p>
+                <p>{{selecteddefi}}</p>
+                <p>{{selectedprocedure}}</p>
                 <PathSelector
                         v-bind:inputpath="inputpath"
                         @selectedPath="getPInputDir"
                 ></PathSelector>
             </v-flex>
             <v-flex xs8 offset-xs2>
+                <transition name="fade">
                 <LangDefiSelector
                         v-bind:langlist="langlist"
                         v-bind:procdata="procdata"
-                        @getSelectedLangDefi="getSelectedLangDefi"
+                        v-bind:selecteddefi="selecteddefi"
+                        v-if="inputpath"
+                        @getSelectedLang="getSelectedLang"
+                        @getSelectedDefi="getSelectedDefi"
                 ></LangDefiSelector>
+                </transition>
             </v-flex>
             <v-flex xs8 offset-xs2>
+                <transition name="fade">
                 <ProcedureSelector v-bind:procdata="procdata"
                                    v-bind:selectedlang="selectedlang"
                                    v-bind:selecteddefi="selecteddefi"
+                                   v-if="selecteddefi"
                                    @getSelectedProcedure="getSelectedProcedure"
                 ></ProcedureSelector>
+                </transition>
             </v-flex>
         </v-layout>
         <v-layout wrap>
             <v-flex xs12>
+                <transition name="fade">
                 <ProcTextArea
                         v-bind:text="selectedPBody"
                         v-bind:selectedprocedure="selectedprocedure"
@@ -32,6 +44,8 @@
                         v-if="selectedprocedure"
                         style="text-align: left;"
                 ></ProcTextArea>
+                </transition>
+                    <transition name="fade">
                 <ConfirmModal
                         v-bind:procdata="procdata"
                         v-bind:selectedlang="selectedlang"
@@ -40,6 +54,7 @@
                         @getSelectedTargetLangs="getSelectedTargetLangs"
                         v-if="selectedprocedure"
                 ></ConfirmModal>
+                </transition>
             </v-flex>
         </v-layout>
     </v-container>
@@ -163,19 +178,29 @@
         return procdata;
       },
       getPInputDir(inputpath) {
+        if (this.inputpath !== inputpath) {
+          this.selectedlang = '';
+          this.selecteddefi = '';
+          this.selectedprocedure = '';
+          this.selectedpbody = '';
+        }
         this.inputpath = inputpath;
         this.procdata = this.getData(inputpath);
       },
-      getSelectedLangDefi(selectedlang, selecteddefi) {
-        if (this.selecteddefi !== '' && this.selectedlang !== selectedlang) {
-          console.log('발생');
+      getSelectedLang(selectedlang) {
+        if (this.selectedlang !== selectedlang) {
           this.selecteddefi = '';
           this.selectedprocedure = '';
-        } else {
-          this.selectedlang = selectedlang;
-          this.selecteddefi = selecteddefi;
-          this.selectedprocedure = '';
+          this.selectedpbody = '';
         }
+        this.selectedlang = selectedlang;
+      },
+      getSelectedDefi(selecteddefi) {
+        if (this.selecteddefi !== selecteddefi) {
+          this.selectedprocedure = '';
+          this.selectedpbody = '';
+        }
+        this.selecteddefi = selecteddefi;
       },
       getSelectedProcedure(selectedprocedure) {
         this.selectedprocedure = selectedprocedure;
@@ -215,5 +240,10 @@
 </script>
 
 <style scoped>
-
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .3s;
+    }
+    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+        opacity: 0;
+    }
 </style>
