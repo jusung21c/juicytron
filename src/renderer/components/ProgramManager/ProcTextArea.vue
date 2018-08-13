@@ -1,64 +1,63 @@
 <template>
-        <codemirror
-                v-model="propText"
-                :options="cmOptions"
-        ></codemirror>
+        <ace-editor v-model="propText" :config="config" width="100%" height="200px"></ace-editor>
 </template>
 
 <script>
-  import { codemirror } from 'vue-codemirror';
-  import 'codemirror/lib/codemirror.css';
-  import 'codemirror/mode/javascript/javascript.js';
-  import 'codemirror/theme/base16-dark.css';
-  import 'codemirror/lib/codemirror';
-  require('codemirror/mode/javascript/javascript');
+import AceEditorOnVue from 'ace-editor-on-vue';
 
-  export default {
-    name: 'TextArea',
-    props: ['text', 'label'],
-    components: {
-      codemirror,
-    },
-    data() {
-      return {
-        content: '',
-        cmOptions: {
-          styleActiveLine: true,
-          tabSize: 4,
-          theme: 'base16-dark',
-          lineNumbers: true,
-          line: true,
-          autofocus: true,
-          showCursorWhenSelecting: true,
-          lineWrapping: true,
-          mode: 'javascript',
 
-        },
-      };
-    },
-    computed: {
-      propText: {
-        get() {
-          return this.text;
-        },
-        set(value) {
-          this.$emit('modifiedText', value);
+export default {
+  name: 'TextArea',
+  props: ['text', 'label'],
+  components: {
+    'ace-editor': AceEditorOnVue,
+  },
+  data() {
+    return {
+      content: '',
+      config: {
+        lang: 'javascript', // default `json`
+        theme: 'xcode', // default `xcode`
+        options: { // options for Ace
+          useSoftTabs: true, // default 2 space characters for indent
+          tabSize: 2,
+          maxLines: 50000,
+          wrap: true,
+          autoScrollEditorIntoView: true,
         },
       },
-    },
-    methods: {
 
+    };
+  },
+  computed: {
+    propText: {
+      get() {
+        return this.text;
+      },
+      set(value) {
+        this.$emit('modifiedText', value);
+      },
     },
+  },
+  methods: {
+    editorInit() {
+      require('brace/ext/language_tools'); // language extension prerequsite...
+      require('brace/mode/javascript'); // language
+      require('brace/theme/chrome');
+      require('brace/snippets/javascript'); // snippet
+    },
+  },
 
-  };
+};
 </script>
 
 <style>
 @import url('https://fonts.googleapis.com/css?family=Nanum+Gothic|PT+Sans&subset=korean');
-.CodeMirror {
-    height: initial;
+.ace_editor {
+border: 1px solid lightgray;
+
     font-family: 'Jeju Gothic', sans-serif;
-        letter-spacing: 0.5px;
-        word-spacing: 1px;
+    font-size: large;
 }
+
 </style>
