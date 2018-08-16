@@ -2,9 +2,6 @@
     <v-container grid-list-xl text-xs-center>
         <v-layout row wrap>
             <v-flex xs8 offset-xs2>
-                <p>{{selectedlang}}</p>
-                <p>{{selecteddefi}}</p>
-                <p>{{selectedprocedure}}</p>
                 <PathSelector
                         v-bind:inputpath="inputpath"
                         @selectedPath="getPInputDir"

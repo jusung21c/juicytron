@@ -16,14 +16,15 @@ export default {
     return {
       content: '',
       config: {
-        lang: 'javascript', // default `json`
-        theme: 'xcode', // default `xcode`
+        theme: 'twilight', // default `xcode`
+        lang: 'pascal',
         options: { // options for Ace
           useSoftTabs: true, // default 2 space characters for indent
           tabSize: 2,
           maxLines: 50000,
           wrap: true,
-          autoScrollEditorIntoView: true,
+          copyWithEmptySelection: true,
+          fontSize: '12pt',
         },
       },
 
@@ -40,12 +41,6 @@ export default {
     },
   },
   methods: {
-    editorInit() {
-      require('brace/ext/language_tools'); // language extension prerequsite...
-      require('brace/mode/javascript'); // language
-      require('brace/theme/chrome');
-      require('brace/snippets/javascript'); // snippet
-    },
   },
 
 };
@@ -54,10 +49,11 @@ export default {
 <style>
 @import url('https://fonts.googleapis.com/css?family=Nanum+Gothic|PT+Sans&subset=korean');
 .ace_editor {
-border: 1px solid lightgray;
-
-    font-family: 'Jeju Gothic', sans-serif;
-    font-size: large;
+    border: 1px solid lightgray;
+    font-family: monospace, monospace;
+}
+.ace_print-margin{
+        visibility: hidden;
 }
 
 </style>
