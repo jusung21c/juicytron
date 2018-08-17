@@ -16,6 +16,11 @@ export default new Router({
       component: require('@/components/ProgramManager').default,
     },
     {
+      path: '/variablesearcher',
+      name: 'variablesearcher',
+      component: require('@/components/VariableSearcher').default,
+    },
+    {
       path: '*',
       redirect: '/',
     },
