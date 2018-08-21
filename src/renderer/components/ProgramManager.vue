@@ -97,6 +97,7 @@
         procdata = procdata.filter(obj => obj.lang === this.selectedlang);
         procdata = procdata.filter(obj => obj.definition === this.selecteddefi);
         procdata = procdata.filter(obj => obj.pname === this.selectedprocedure);
+        this.selectedpbody = procdata[0].pbody;
         return procdata[0].pbody;
       } },
     methods: {

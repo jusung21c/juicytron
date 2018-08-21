@@ -7,7 +7,6 @@
                     :label="`프로시져를 선택해 주세요.`"
                     persistent-hint
                     prepend-icon="create"
-
                     @change="selectedProcedure"
             >
             </v-autocomplete>
