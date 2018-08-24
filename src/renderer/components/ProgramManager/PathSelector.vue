@@ -2,7 +2,7 @@
 <template>
     <v-layout row>
         <v-text-field
-                label="PROGRAM/INPUT 폴더 경로를 선택해 주세요."
+                label="INPUT 폴더 경로를 선택해 주세요."
                 v-model="inputpath"
                 :rules="dirRules"
                 required
@@ -30,8 +30,10 @@
         dialog.showOpenDialog({
           properties: ['openDirectory'],
         }, (selectedFiles) => {
-          const selectedpath = selectedFiles.toString();
-          this.$emit('selectedPath', selectedpath);
+          if (selectedFiles !== undefined) {
+            const selectedpath = selectedFiles.toString();
+            this.$emit('selectedPath', selectedpath);
+          }
         });
       },
     },
