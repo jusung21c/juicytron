@@ -7,7 +7,6 @@
             <v-toolbar-title>Searcher</v-toolbar-title>
             <v-autocomplete
                     :loading="loading"
-                    :items="items"
                     :search-input.sync="search"
                     v-model="select"
                     cache-items
@@ -19,7 +18,27 @@
                     solo-inverted
             ></v-autocomplete>
         </v-toolbar>
-        <p>{{data.version}}</p>
+        <v-data-table
+                :headers="headers"
+                :items="data"
+                hide-actions
+                item-key="title"
+        >
+            <template slot="items" slot-scope="props" v-if="isExist(props.item.title)">
+                <transition name="fade">
+                <tr @click="props.expanded = !props.expanded">
+                    <td>{{ props.item.title }}</td>
+                    <td>{{ props.item.description }}</td>
+                </tr>
+                </transition>
+            </template>
+
+            <template slot="expand" slot-scope="props">
+                <v-card flat>
+                    <v-card-text>{{ props.item.value }}</v-card-text>
+                </v-card>
+            </template>
+        </v-data-table>
     </v-flex>
 </template>
 
@@ -29,52 +48,82 @@
   export default {
     data() {
       return {
+        tableloading: true,
         loading: false,
         items: [],
         search: null,
         select: null,
+        variable: null,
         data: null,
+        searcheddata: null,
+        headers: [
+          {
+            text: 'Vairalbe Name',
+            align: 'left',
+            value: 'title',
+          },
+          { text: 'Description', value: 'description' },
+        ],
       };
     },
-    computed: {
-      test() {
-        const a = this.test;
-        a.forEach((val) => {
-          console.log(val);
-        });
-      },
-    },
+    computed: {},
     created() {
       request.get(
         {
           url: 'https://spreadsheets.google.com/feeds/list/1Dnbk9uaHWISeOQsbSwjPNLV6QSKQYPWRb7iCnqyzQXQ/od6/public/values?alt=json',
           followAllRedirects: true,
         }, (error, response, body) => {
-          console.log(body);
+          const arr = [];
           if (!error && response.statusCode === 200) {
-            this.data = body;
+            const jsondata = JSON.parse(body).feed.entry;
+            jsondata.forEach((val) => {
+              const dataobj = {
+                title: val.gsx$name.$t,
+                description: val.gsx$description.$t,
+                value: val.gsx$value.$t,
+              };
+              arr.push(dataobj);
+            });
+            this.data = arr;
+            this.items = this.getItems(arr);
           }
         },
       );
     },
     watch: {
       search(val) {
-        val && val !== this.select && this.querySelections(val);
+        val && val !== this.select && this.checkData(val);
       },
     },
     methods: {
-      querySelections() {
-        this.loading = true;
-        // Simulated ajax query
-        const a = [];
-
-        setTimeout(() => {
-          this.variable.forEach((val) => {
-            a.push(`${val.name}\n${val.comment}\n${val.value}`);
+      getItems(arrdataobj) {
+        const arr = [];
+        arrdataobj.forEach((val) => {
+          arr.push(val.title);
+        });
+        return arr;
+      },
+      checkData(string) {
+        const arr = [];
+        this.data.forEach((val) => {
+          if (val.title.includes(string.toUpperCase()) === true
+              || val.description.includes(string) === true
+              || val.value.includes(string) === true) {
+            arr.push(val);
+          }
+        },
+        );
+        this.searcheddata = arr;
+      },
+      isExist(string) {
+        const arr = [];
+        if (this.searcheddata !== null) {
+          this.searcheddata.forEach((val) => {
+            arr.push(val.title);
           });
-          this.items = a;
-          this.loading = false;
-        }, 50);
+          return arr.indexOf(string) !== -1;
+        }
+        return false;
       },
     },
   }

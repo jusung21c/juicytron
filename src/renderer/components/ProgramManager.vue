@@ -1,5 +1,12 @@
 <template>
     <v-container grid-list-xl text-xs-center>
+        <v-alert
+                :value="true"
+                type="success"
+                v-for="file in changedfiles"
+        >
+            {{file}}
+        </v-alert>
         <v-layout row wrap>
             <v-flex xs8 offset-xs2>
                 <PathSelector
@@ -52,6 +59,7 @@
                         v-if="selectedprocedure"
                 ></ConfirmModal>
                 </transition>
+
             </v-flex>
         </v-layout>
     </v-container>
@@ -89,6 +97,7 @@
         selectedprocedure: '',
         selectedpbody: '',
         selectedtargetlangs: [],
+        changedfiles: [],
       };
     },
     computed: {
@@ -226,6 +235,7 @@
           replace(options)
             .then((changes) => {
               console.log('Modified files:', changes.join(', '));
+              this.changedfiles.push(changes.join(', '));
             })
             .catch((error) => {
               console.error('Error occurred:', error);
