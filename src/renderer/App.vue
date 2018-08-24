@@ -95,6 +95,7 @@
       items: [
         { icon: 'apps', title: 'Home', to: '/' },
         { icon: 'bubble_chart', title: 'Program Manager', to: '/programmanager' },
+        { icon: 'text_rotate_vertical', title: 'Literal Sorter', to: '/literalsorter' },
       ],
       miniVariant: false,
       right: true,

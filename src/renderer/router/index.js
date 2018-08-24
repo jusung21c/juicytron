@@ -16,6 +16,11 @@ export default new Router({
       component: require('@/components/ProgramManager').default,
     },
     {
+      path: '/literalsorter',
+      name: 'literalsorter',
+      component: require('@/components/LiteralSorter').default,
+    },
+    {
       path: '*',
       redirect: '/',
     },
