@@ -79,7 +79,7 @@
       </v-navigation-drawer>
       <v-footer :fixed="fixed" app>
         <v-spacer></v-spacer>
-        <span>&copy; 2017</span>
+        <span>&copy; 2018 JuicYJusung</span>
       </v-footer>
     </v-app>
   </div>
@@ -93,14 +93,14 @@
       drawer: true,
       fixed: false,
       items: [
-        { icon: 'apps', title: 'Welcome', to: '/' },
-        { icon: 'bubble_chart', title: 'Inspire', to: '/programmanager' },
+        { icon: 'apps', title: 'Home', to: '/' },
         { icon: 'bubble_chart', title: 'Program Manager', to: '/programmanager' },
+        { icon: 'bubble_chart', title: 'Variable Searcher', to: '/variablesearcher' },
       ],
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'Vuetify.js',
+      title: 'JuicyTron',
     }),
   };
 </script>
@@ -108,4 +108,13 @@
 <style>
   @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons');
   /* Global CSS */
+  .v-footer{
+    z-index: 5;
+  }
+  .v-toolbar{
+    z-index: 5;
+  }
+  .v-navigation-drawer{
+    z-index:6;
+  }
 </style>

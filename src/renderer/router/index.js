@@ -7,13 +7,18 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'welcome-view',
-      component: require('@/components/WelcomeView').default,
+      name: 'home',
+      component: require('@/components/Home').default,
     },
     {
       path: '/programmanager',
       name: 'programmanager',
       component: require('@/components/ProgramManager').default,
+    },
+    {
+      path: '/variablesearcher',
+      name: 'variablesearcher',
+      component: require('@/components/VariableSearcher').default,
     },
     {
       path: '*',
