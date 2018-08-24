@@ -21,6 +21,11 @@ export default new Router({
       component: require('@/components/VariableSearcher').default,
     },
     {
+      path: '/literalsorter',
+      name: 'literalsorter',
+      component: require('@/components/LiteralSorter').default,
+    },
+    {
       path: '*',
       redirect: '/',
     },
