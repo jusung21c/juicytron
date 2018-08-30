@@ -1,35 +1,50 @@
 <template>
-    <v-flex>
-        <v-toolbar
-                dark
-                color="teal"
-        >
-            <v-toolbar-title>Searcher</v-toolbar-title>
-            <v-autocomplete
-                    :loading="loading"
-                    :search-input.sync="search"
-                    v-model="select"
-                    cache-items
-                    class="mx-3"
-                    flat
-                    hide-no-data
-                    hide-details
-                    label="무엇을 검색하시겠습니까?"
-                    solo-inverted
-            ></v-autocomplete>
-        </v-toolbar>
+    <v-container grid-list-xl text-xs-center>
+        <v-layout row>
+            <v-spacer></v-spacer>
+
+        </v-layout>
+        <v-flex xs8 offset-xs2 my-4>
+            <v-card dark color="purple">
+                <v-card-title>
+                    <h1>Variable Searcher</h1>
+                    <v-spacer></v-spacer>
+                    <v-btn color="teal" large @click="open('https://docs.google.com/spreadsheets/d/1Dnbk9uaHWISeOQsbSwjPNLV6QSKQYPWRb7iCnqyzQXQ/edit#gid=0')">시트바로가기</v-btn>
+                </v-card-title>
+            </v-card>
+        </v-flex>
+        <v-layout row>
+            <v-flex xs8 offset-xs2 my-4>
+                <v-toolbar
+                        dark
+                        color="teal"
+                >
+                    <v-toolbar-title>Searcher</v-toolbar-title>
+                    <v-text-field
+                            v-model="search"
+                            append-icon="search"
+                            single-line
+                            hide-details
+                            class="mx-3"
+                    ></v-text-field>
+                </v-toolbar>
+            </v-flex>
+        </v-layout>
         <v-data-table
                 :headers="headers"
                 :items="data"
+                :search="search"
+                :loading="loading"
                 hide-actions
                 item-key="title"
         >
-            <template slot="items" slot-scope="props" v-if="isExist(props.item.title)">
+            <template slot="items" slot-scope="props" >
                 <transition name="fade">
-                <tr @click="props.expanded = !props.expanded">
-                    <td>{{ props.item.title }}</td>
-                    <td>{{ props.item.description }}</td>
-                </tr>
+                    <tr @click="props.expanded = !props.expanded">
+                        <td>{{ props.item.title }}</td>
+                        <td>{{ props.item.description }}</td>
+                        <td style="width: 30%">{{ props.item.value }}</td>
+                    </tr>
                 </transition>
             </template>
 
@@ -39,61 +54,54 @@
                 </v-card>
             </template>
         </v-data-table>
-    </v-flex>
+
+    </v-container>
 </template>
 
 <script>
-  const request = require('request');
+  const rp = require('request-promise-native');
 
   export default {
     data() {
       return {
         tableloading: true,
-        loading: false,
+        loading: true,
         items: [],
-        search: null,
+        search: '',
         select: null,
         variable: null,
-        data: null,
+        data: [],
         searcheddata: null,
         headers: [
           {
             text: 'Vairalbe Name',
-            align: 'left',
             value: 'title',
           },
           { text: 'Description', value: 'description' },
+          { text: 'Value', value: 'value' },
         ],
       };
     },
     computed: {},
-    created() {
-      request.get(
-        {
-          url: 'https://spreadsheets.google.com/feeds/list/1Dnbk9uaHWISeOQsbSwjPNLV6QSKQYPWRb7iCnqyzQXQ/od6/public/values?alt=json',
-          followAllRedirects: true,
-        }, (error, response, body) => {
-          const arr = [];
-          if (!error && response.statusCode === 200) {
-            const jsondata = JSON.parse(body).feed.entry;
-            jsondata.forEach((val) => {
-              const dataobj = {
-                title: val.gsx$name.$t,
-                description: val.gsx$description.$t,
-                value: val.gsx$value.$t,
-              };
-              arr.push(dataobj);
-            });
-            this.data = arr;
-            this.items = this.getItems(arr);
-          }
-        },
-      );
+    beforeCreate() {
+      rp('https://spreadsheets.google.com/feeds/list/1Dnbk9uaHWISeOQsbSwjPNLV6QSKQYPWRb7iCnqyzQXQ/od6/public/values?alt=json')
+        .then(data => new Promise((resolve) => {
+          resolve(JSON.parse(data).feed.entry);
+        }))
+        .then(entry => Promise.all(entry.map(val => (
+          { title: val.gsx$name.$t,
+            description: val.gsx$description.$t,
+            value: val.gsx$value.$t }
+        ))))
+        .then((obj) => {
+          this.data = obj;
+          this.loading = false;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     },
     watch: {
-      search(val) {
-        val && val !== this.select && this.checkData(val);
-      },
     },
     methods: {
       getItems(arrdataobj) {
@@ -103,27 +111,8 @@
         });
         return arr;
       },
-      checkData(string) {
-        const arr = [];
-        this.data.forEach((val) => {
-          if (val.title.includes(string.toUpperCase()) === true
-              || val.description.includes(string) === true
-              || val.value.includes(string) === true) {
-            arr.push(val);
-          }
-        },
-        );
-        this.searcheddata = arr;
-      },
-      isExist(string) {
-        const arr = [];
-        if (this.searcheddata !== null) {
-          this.searcheddata.forEach((val) => {
-            arr.push(val.title);
-          });
-          return arr.indexOf(string) !== -1;
-        }
-        return false;
+      open(link) {
+        this.$electron.shell.openExternal(link);
       },
     },
   }
@@ -131,7 +120,12 @@
 </script>
 
 <style scoped>
-
+.v-toolbar{
+    z-index: 1;
+}
+table.v-table tbody td{
+    text-align: left;
+}
 </style>
 
 

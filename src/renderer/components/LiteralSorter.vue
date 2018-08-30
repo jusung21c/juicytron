@@ -1,28 +1,5 @@
 <template>
     <v-container grid-list-xl text-xs-center>
-        <v-flex>
-            <v-alert
-                    :value="true"
-                    type="error"
-                    v-for="error in alerterror"
-            >
-                {{error}}
-            </v-alert>
-            <v-alert
-                    :value="true"
-                    type="success"
-                    v-for="suc in alertsuccess"
-            >
-                {{suc}}
-            </v-alert>
-            <PathSelector
-                    v-bind:inputpath="selectedpath"
-                    @selectedPath="getPath"
-            ></PathSelector>
-            <transition name="fade">
-                <v-btn @click="getData" v-if="selectedpath" transition="fade">정렬!</v-btn>
-            </transition>
-        </v-flex>
         <v-dialog v-model="helpdialog" max-width="800px">
             <v-card>
                 <v-card-title>
@@ -31,12 +8,13 @@
                 </v-card-title>
                 <v-card-text>
 
-                <h2>1. Table Builer / Input 경로를 설정합니다.</h2>
-                <h2>2. 정렬 버튼을 누른다.</h2><br>
+                    <h2>1. Table Builer / Input 경로를 설정합니다.</h2>
+                    <h2>2. 정렬 버튼을 누른다.</h2><br>
                     <h3>이 툴의 로직과 알고리즘은</h3>
                     <h3>*_input의 경로를 설정하면 input폴더안의 3글자인 디렉토리명을 가져오고(언어들) 그언어들을 통해서 리터럴 deifinition을 찾습니다.</h3>
                     <h3>*_각 definition의 %TAG ~ %LID / %LID ~ %LEX 부분을 탐색합니다.</h3>
-                    <h3>*_%TAG ~ %LID 중 %TAG 바로 아래 %~~~/ !THIS_IS_JUST_VERSION ~~~ / THIS_IS_JUST_VERSION ~~~~ 을 탐색합니다.</h3>
+                    <h3>*_%TAG ~ %LID 중 %TAG 바로 아래 %~~~/ !THIS_IS_JUST_VERSION ~~~ / THIS_IS_JUST_VERSION ~~~~ 을
+                        탐색합니다.</h3>
                     <h3>*_나머지 라인들을 정렬합니다. (변수처럼 처리 안하고 각 한줄 통째로 인식하게 작성했습니다.)</h3>
                     <h3>*_기존 파일에 write 합니다.</h3>
 
@@ -47,10 +25,31 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <v-flex xs6 offset-xs3>
+            <v-alert :value="true" type="error" v-for="error in alerterror">{{error}}</v-alert>
+            <v-alert :value="true" type="success" v-for="suc in alertsuccess">{{suc}}</v-alert>
+        </v-flex>
+        <v-flex xs8 offset-xs2 my-4>
+
+            <v-card dark color="blue">
+                <v-card-title>
+                    <h1>Literal Sorter</h1>
+                    <v-spacer></v-spacer>
+                    <v-btn color="green" @click.stop="helpdialog = true">HELP</v-btn>
+                </v-card-title>
+            </v-card>
+        </v-flex>
         <v-layout>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" dark @click.stop="helpdialog = true">?</v-btn>
+            <v-flex xs8 offset-xs2>
+                <PathSelector
+                        v-bind:inputpath="selectedpath"
+                        @selectedPath="getPath"
+                ></PathSelector>
+            </v-flex>
         </v-layout>
+        <transition name="fade">
+            <v-btn @click="getData" v-if="selectedpath" transition="fade">정렬!</v-btn>
+        </transition>
     </v-container>
 </template>
 
@@ -149,10 +148,13 @@
               from: [new RegExp(/%TAG[^]*?%LID/, 'gm'), new RegExp(/%LID[^]*?%LEX/, 'gm')],
               to: [promptContent, lidContent],
             };
+
             replace(options)
               .then((changes) => {
                 console.log('Modified files:', changes.join(', '));
-                this.alertsuccess.push(changes.join(', '));
+                if (changes.length !== 0) {
+                  this.alertsuccess.push(changes.join(', '));
+                }
               })
               .catch((error) => {
                 console.error('Error occurred:', error);

@@ -1,6 +1,6 @@
 
 <template>
-    <v-layout row>
+    <v-layout row wrap my-4>
         <v-text-field
                 label="INPUT 폴더 경로를 선택해 주세요."
                 v-model="inputpath"

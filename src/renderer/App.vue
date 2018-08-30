@@ -94,9 +94,12 @@
       fixed: false,
       items: [
         { icon: 'apps', title: 'Home', to: '/' },
+        { icon: 'calendar_today', title: 'Google Calendar(beta)', to: '/calendar' },
+        { icon: 'search', title: 'Variable Searcher', to: '/variablesearcher' },
         { icon: 'bubble_chart', title: 'Program Manager', to: '/programmanager' },
-        { icon: 'bubble_chart', title: 'Variable Searcher', to: '/variablesearcher' },
         { icon: 'text_rotate_vertical', title: 'Literal Sorter', to: '/literalsorter' },
+
+
       ],
       miniVariant: false,
       right: true,
