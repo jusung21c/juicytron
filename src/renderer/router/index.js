@@ -11,6 +11,11 @@ export default new Router({
       component: require('@/components/Home').default,
     },
     {
+      path: '/trello',
+      name: 'trello',
+      component: require('@/components/Trello').default,
+    },
+    {
       path: '/calendar',
       name: 'calendar',
       component: require('@/components/Calendar').default,
