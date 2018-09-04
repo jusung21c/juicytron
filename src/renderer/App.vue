@@ -72,6 +72,7 @@
       items: [
         { icon: 'apps', title: 'Home', to: '/' },
         { icon: 'list_alt', title: 'Trello', to: '/trello' },
+        { icon: 'insert_drive_file', title: 'Google Drive', to: '/googledrive' },
         { icon: 'calendar_today', title: 'Google Calendar', to: '/calendar' },
         { icon: 'search', title: 'Variable Searcher', to: '/variablesearcher' },
         { icon: 'bubble_chart', title: 'Program Manager', to: '/programmanager' },

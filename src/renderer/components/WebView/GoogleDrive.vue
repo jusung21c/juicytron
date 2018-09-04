@@ -1,6 +1,6 @@
 <template>
         <webview id="foo"
-                 src="https://trello.com/b/6Im1dKWZ/nlp%EA%B0%9C%EB%B0%9C%ED%8C%80"
+                 src="https://drive.google.com/drive/folders/16ylgC5pCWVyQIowfwjLDVfZPbSPzYvks?usp=sharing"
                  allowpopups></webview>
 </template>
 
@@ -11,7 +11,7 @@
   /* eslint-enable */
 
   export default {
-    name: 'Trello',
+    name: 'Drive',
     mounted() {
       const webview = document.querySelector('webview');
       webview.addEventListener('new-window', (e) => {

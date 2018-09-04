@@ -13,12 +13,17 @@ export default new Router({
     {
       path: '/trello',
       name: 'trello',
-      component: require('@/components/Trello').default,
+      component: require('@/components/WebView/Trello').default,
     },
     {
       path: '/calendar',
       name: 'calendar',
-      component: require('@/components/Calendar').default,
+      component: require('@/components/WebView/Calendar').default,
+    },
+    {
+      path: '/googledrive',
+      name: 'googledrive',
+      component: require('@/components/WebView/GoogleDrive').default,
     },
     {
       path: '/programmanager',
