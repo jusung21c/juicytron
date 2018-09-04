@@ -6,8 +6,22 @@
 
 
 <script>
+  /* eslint-disable */
+  const { shell } = require('electron').remote;
+  /* eslint-enable */
+
   export default {
     name: 'Calendar',
+    mounted() {
+      const webview = document.querySelector('webview');
+      webview.addEventListener('new-window', (e) => {
+        console.log('new window event called');
+        const protocol = require('url').parse(e.url).protocol;
+        if (protocol === 'http:' || protocol === 'https:') {
+          shell.openExternal(e.url);
+        }
+      });
+    },
   };
 </script>
 
