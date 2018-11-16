@@ -57,6 +57,7 @@
     "ace-editor-on-vue": "^0.1.1",
     "axios": "^0.16.1",
     "brace": "^0.11.1",
+    "electron-store": "^2.0.0",
     "fs-finder": "^1.8.1",
     "replace-in-file": "^3.4.0",
     "request": "^2.88.0",

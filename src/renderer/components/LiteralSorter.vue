@@ -42,7 +42,8 @@
         <v-layout>
             <v-flex xs8 offset-xs2>
                 <PathSelector
-                        v-bind:inputpath="selectedpath"
+                        v-bind:path="selectedpath"
+                        v-bind:description="`Table Builer / Input 경로를 설정해주세요.`"
                         @selectedPath="getPath"
                 ></PathSelector>
             </v-flex>
@@ -54,7 +55,7 @@
 </template>
 
 <script>
-  import PathSelector from './ProgramManager/PathSelector';
+  import PathSelector from './General/PathSelector';
 
   const fs = require('fs');
   const path = require('path');

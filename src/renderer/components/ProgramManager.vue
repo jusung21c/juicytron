@@ -35,7 +35,8 @@
         <v-layout row wrap>
             <v-flex xs8 offset-xs2>
                 <PathSelector
-                        v-bind:inputpath="inputpath"
+                        v-bind:path="inputpath"
+                        v-bind:description="`Program Builder / input 폴더를 선택해주세요.`"
                         @selectedPath="getPInputDir"
                 ></PathSelector>
             </v-flex>
@@ -90,7 +91,7 @@
 </template>
 
 <script>
-  import PathSelector from './ProgramManager/PathSelector';
+  import PathSelector from './General/PathSelector';
   import LangDefiSelector from './ProgramManager/LangDefiSelector';
   import ProcedureSelector from './ProgramManager/ProcedureSelector';
   import ProcTextArea from './ProgramManager/ProcTextArea';

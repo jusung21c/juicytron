@@ -31,6 +31,11 @@ export default new Router({
       component: require('@/components/ProgramManager').default,
     },
     {
+      path: '/comp4release',
+      name: 'comp4release',
+      component: require('@/components/Comp4release').default,
+    },
+    {
       path: '/variablesearcher',
       name: 'variablesearcher',
       component: require('@/components/VariableSearcher').default,
@@ -39,6 +44,11 @@ export default new Router({
       path: '/literalsorter',
       name: 'literalsorter',
       component: require('@/components/LiteralSorter').default,
+    },
+    {
+      path: '/adbcompact',
+      name: 'adbcompact',
+      component: require('@/components/AdbCompact').default,
     },
     {
       path: '*',

@@ -76,8 +76,9 @@
         { icon: 'calendar_today', title: 'Google Calendar', to: '/calendar' },
         { icon: 'search', title: 'Variable Searcher', to: '/variablesearcher' },
         { icon: 'bubble_chart', title: 'Program Manager', to: '/programmanager' },
+        { icon: 'bubble_chart', title: '릴리즈 파일 생성 및 배포', to: '/comp4release' },
         { icon: 'text_rotate_vertical', title: 'Literal Sorter', to: '/literalsorter' },
-
+        { icon: 'text_rotate_vertical', title: 'Adb Manager(경제형)', to: '/adbcompact' },
 
       ],
       miniVariant: false,
