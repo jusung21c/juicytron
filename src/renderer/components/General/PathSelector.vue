@@ -7,7 +7,7 @@
     <v-layout row wrap>
         <v-text-field
                 label="경로를 선택해 주세요."
-                v-model="path"
+                v-model="propPath"
                 :rules="dirRules"
                 required
         ></v-text-field>
@@ -31,6 +31,14 @@
       };
     },
     computed: {
+      propPath: {
+        get() {
+          return this.path;
+        },
+        set(value) {
+          this.$emit('selectedPath', value);
+        },
+      },
     },
     methods: {
       openDir() {

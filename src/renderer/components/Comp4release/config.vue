@@ -25,16 +25,16 @@
 
                 <v-flex>
                     <PathSelector
-                            v-bind:path="inputpath"
+                            v-bind:path="getInputPath"
                             v-bind:description="`input 폴더를 선택해주세요. (예: C:\\LP_Src\\IQS_18MY_Hybrid_Wide_STD\\Release\\Input\\)`"
-                            @selectedPath="getInputPath"
+                            @selectedPath="pullInputPath"
                     ></PathSelector>
                 </v-flex>
                 <v-flex>
                     <PathSelector
-                            v-bind:path="outputpath"
+                            v-bind:path="getOutputPath"
                             v-bind:description="`output 폴더를 선택해주세요. (예: C:\\Output)`"
-                            @selectedPath="getOutputPath"
+                            @selectedPath="pullOutputPath"
                     ></PathSelector>
                 </v-flex>
                 <v-container grid-list-md text-xs-center>
@@ -108,8 +108,6 @@
                         </v-flex>
                     </v-layout>
                 </v-container>
-
-
             </v-card>
         </v-dialog>
     </v-layout>
@@ -117,7 +115,7 @@
 
 <script>
   import PathSelector from '../General/PathSelector';
-
+  import { mapGetters, mapMutations } from '../../../../node_modules/vuex';
   const Store = require('electron-store');
   const store = new Store();
   export default {
@@ -130,11 +128,6 @@
       notifications: false,
       sound: true,
       widgets: false,
-      inputpath: store.get('basic.inputpath'),
-      outputpath: store.get('basic.outputpath'),
-      nation: store.get('basic.nation'),
-      dirname: store.get('basic.dirname'),
-      filename: store.get('basic.filename'),
       version: this.computedVersion,
       mzserverpath: store.get('mz.serverpath'),
       mzusername: store.get('mz.username'),
@@ -144,75 +137,86 @@
       ],
     }),
     computed: {
+      ...mapGetters([
+        'getInputPath',
+        'getOutputPath',
+      ]),
       computedNation: {
         get() {
-          return this.nation;
+          return this.$store.getters.getNation;
         },
         set(value) {
-          this.nation = value;
           store.set('basic.nation', value);
+          this.$store.commit('setNation', value);
         },
       },
       computedDirname: {
         get() {
-          return this.dirname;
+          return this.$store.getters.getDirname;
         },
         set(value) {
-          this.dirname = value;
           store.set('basic.dirname', value);
+          this.$store.commit('setDirname', value);
         },
       },
       computedFilename: {
         get() {
-          return store.get('basic.filename');
+          return this.$store.getters.getFilename;
         },
         set(value) {
-          this.filename = value;
           store.set('basic.filename', value);
+          this.$store.commit('setFilename', value);
         },
       },
       computedVersion: {
         get() {
           const regex = new RegExp(/[\d]{1,2}\.[\d]{1,2}\.[\d]{1,2}/, 'gm');
-          return this.filename.match(regex);
+          const version = this.computedFilename.match(regex);
+          store.set('basic.version', version);
+          this.$store.commit('setVersion', version);
+          return version;
         },
       },
       computedMzServerPath: {
         get() {
-          return this.mzserverpath;
+          return this.$store.getters.getMzServerPath;
         },
         set(value) {
-          this.mzserverpath = value;
           store.set('mz.serverpath', value);
+          this.$store.commit('setMzServerPath', value);
         },
       },
       computedMzUsername: {
         get() {
-          return this.mzusername;
+          return this.$store.getters.getMzUserName;
         },
         set(value) {
-          this.mzusername = value;
           store.set('mz.username', value);
+          this.$store.commit('setMzUserName', value);
         },
       },
       computedMzPassword: {
         get() {
-          return this.mzpassword;
+          return this.$store.getters.getMzPassword;
         },
         set(value) {
-          this.mzpassword = value;
-          store.set('mz.password', value);
+          store.set('mz.mzpassword', value);
+          this.$store.commit('setMzPassword', value);
         },
       },
     },
     methods: {
-      getInputPath(path) {
+      ...mapMutations([
+        'setInputPath',
+        'setOutputPath',
+      ]),
+      pullInputPath(path) {
         store.set('basic.inputpath', path);
-        this.inputpath = store.get('basic.inputpath');
+        this.$store.commit('setInputPath', path);
       },
-      getOutputPath(path) {
+      pullOutputPath(path) {
         store.set('basic.outputpath', path);
-        this.outputpath = store.get('basic.outputpath');
+        this.$store.commit('setOutputPath', path);
       },
     },
   };

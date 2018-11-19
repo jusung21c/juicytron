@@ -14,19 +14,41 @@
 
 <script>
   import UserConfig from './Comp4release/config';
+
+  import { mapGetters } from '../../../node_modules/vuex';
   const Store = require('electron-store');
+  // const targz = require('targz');
+  const path = require('path');
+  // const fs = require('fs');
+  // const mkdirp = require('mkdirp');
+  // const exec = require('child_process').exec;
+  // const isSymbolicLink = require('is-symbolic-link');
+  // const tar = require('tar');
+
+
   const store = new Store();
 
   export default {
-    name: 'welcome',
+    name: 'comp4release',
     components: {
       UserConfig,
     },
     data: () => ({
       items: 'hello',
-      userdata: store.path,
+      vrPath: path.join(store.get('basic.inputpath'), store.get('basic.nation'), 'vr'),
     }),
     computed: {
+      ...mapGetters([
+        'getInputPath',
+        'getOutputPath',
+        'getNation',
+        'getDirname',
+        'getFilename',
+        'getVersion',
+        'getMzServerPath',
+        'getMzUserName',
+        'getMzPassword',
+      ]),
     },
     methods: {},
   };
