@@ -4,6 +4,8 @@ import Vuex from 'vuex';
 import modules from './modules';
 const Store = require('electron-store');
 const store = new Store();
+const path = require('path');
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -19,6 +21,9 @@ export default new Vuex.Store({
     mzserverpath: store.get('mz.serverpath'),
     mzusername: store.get('mz.username'),
     mzpassword: store.get('mz.password'),
+    relativesympath: '../../space/vr_fixed/LPTE/BASE',
+    bzippath: '".\\GnuWin32\\bin\\bzip2.exe"',
+
   },
   getters: {
     getInputPath: state => state.inputpath,
@@ -30,6 +35,12 @@ export default new Vuex.Store({
     getMzServerPath: state => state.mzserverpath,
     getMzUserName: state => state.mzusername,
     getMzPassword: state => state.mzpassword,
+    getVrPath: state => path.join(state.inputpath, state.nation, 'vr'),
+    getVrFiexedPath: state => path.join(state.inputpath, state.nation, 'space'),
+    getOutputDirnamePath: state => path.join(state.outputpath, state.dirname),
+    getSympath: state => path.join(state.inputpath, state.nation, 'vr', 'LPTE', 'BASE'),
+    getRelativeSymPath: state => state.relativesympath,
+    getBzipPath: state => state.bzippath,
   },
   mutations: {
     setInputPath: (state, payload) => {
