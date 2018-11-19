@@ -67,7 +67,7 @@
                             <v-text-field
                                     label="현재버전"
                                     v-model="computedVersion"
-                                    readonly="true"
+                                    readonly true
                             ></v-text-field>
                         </v-flex>
                     </v-layout>
@@ -105,7 +105,6 @@
                                     :rules="blankrule"
                                     required
                             ></v-text-field>
-                            <h1></h1>
                         </v-flex>
                     </v-layout>
                 </v-container>
@@ -150,6 +149,7 @@
           return this.nation;
         },
         set(value) {
+          this.nation = value;
           store.set('basic.nation', value);
         },
       },
@@ -158,22 +158,23 @@
           return this.dirname;
         },
         set(value) {
+          this.dirname = value;
           store.set('basic.dirname', value);
         },
       },
       computedFilename: {
         get() {
-          return this.filename;
+          return store.get('basic.filename');
         },
         set(value) {
+          this.filename = value;
           store.set('basic.filename', value);
         },
       },
       computedVersion: {
         get() {
           const regex = new RegExp(/[\d]{1,2}\.[\d]{1,2}\.[\d]{1,2}/, 'gm');
-          const a = this.filename.match(regex);
-          return a;
+          return this.filename.match(regex);
         },
       },
       computedMzServerPath: {
@@ -181,6 +182,7 @@
           return this.mzserverpath;
         },
         set(value) {
+          this.mzserverpath = value;
           store.set('mz.serverpath', value);
         },
       },
@@ -189,6 +191,7 @@
           return this.mzusername;
         },
         set(value) {
+          this.mzusername = value;
           store.set('mz.username', value);
         },
       },
@@ -197,6 +200,7 @@
           return this.mzpassword;
         },
         set(value) {
+          this.mzpassword = value;
           store.set('mz.password', value);
         },
       },
@@ -209,9 +213,6 @@
       getOutputPath(path) {
         store.set('basic.outputpath', path);
         this.outputpath = store.get('basic.outputpath');
-      },
-      getVersion(filename) {
-        console.log(filename);
       },
     },
   };
