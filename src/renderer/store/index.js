@@ -23,7 +23,7 @@ export default new Vuex.Store({
     mzpassword: store.get('mz.password'),
     relativesympath: '../../space/vr_fixed/LPTE/BASE',
     bzippath: '".\\GnuWin32\\bin\\bzip2.exe"',
-
+    progressmessage: [],
   },
   getters: {
     getInputPath: state => state.inputpath,
@@ -41,6 +41,7 @@ export default new Vuex.Store({
     getSympath: state => path.join(state.inputpath, state.nation, 'vr', 'LPTE', 'BASE'),
     getRelativeSymPath: state => state.relativesympath,
     getBzipPath: state => state.bzippath,
+    getProgressMessage: state => state.progressmessage,
   },
   mutations: {
     setInputPath: (state, payload) => {
@@ -69,6 +70,12 @@ export default new Vuex.Store({
     },
     setMzPassword: (state, payload) => {
       state.mzpassword = payload;
+    },
+    pushProgressMessage: (state, payload) => {
+      state.progressmessage.push(payload);
+    },
+    clearProgressMessage: (state) => {
+      state.progressmessage = [];
     },
   },
 });

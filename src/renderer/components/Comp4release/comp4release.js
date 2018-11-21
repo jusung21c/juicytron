@@ -10,6 +10,7 @@ const compTargz = (input, dest) => new Promise((resolve, reject) => {
   fs.readdir(input, (err) => {
     if (!err) {
       console.log(`${input} 압축을 시작합니다.`);
+      this.$store.commit('pushProgressMessage', `${input} 압축을 시작합니다.`);
       console.time('ct');
       targz.compress({
         src: input,
@@ -19,11 +20,10 @@ const compTargz = (input, dest) => new Promise((resolve, reject) => {
           console.timeEnd('ct');
           console.error(err);
           reject(err);
-        } else {
-          console.log(`${input} 압축이 끝났습니다.`);
-          console.timeEnd('ct');
-          resolve('done');
         }
+        console.log(`${input} 압축이 끝났습니다.`);
+        console.timeEnd('ct');
+        resolve(`${input} 압축이 끝났습니다.`);
       });
     } else {
       reject(`${input} 경로가 존재하지 않습니다.`);
@@ -47,16 +47,15 @@ const checkSymlink = (sympath, relativeSymPath) => new Promise((resolve, reject)
       console.log('');
       if (isLink) {
         console.log(`${sympath} 심볼릭 링크가 이미 존재하여 생성을 건너 뜁니다.`);
-        resolve();
+        resolve('심볼릭 링크가 이미 존재하여 생성을 건너 뜁니다.');
       } else {
         fs.symlink(relativeSymPath, sympath, (err) => {
           if (err) {
             console.error(err);
-            console.error('권한 문제시 관리자 권한으로 실행해주세요.');
             reject(err);
           } else {
             console.log('심볼릭 링크 생성 완료!');
-            resolve();
+            resolve('심볼릭 링크 생성 완료!');
           }
         });
       }
@@ -69,7 +68,7 @@ const checkOutputDir = outputdirnamepath => new Promise((resolve) => {
     if (error) {
       console.error(`${outputdirnamepath} 폴더가 없어 생성합니다.`);
       mkdirp(outputdirnamepath, (error) => {
-        // console.error(error);
+        console.error(error);
         resolve(error);
       });
     } else {
@@ -87,7 +86,7 @@ const bz2comp = (bzippath, outputPath, filename) => new Promise((resolve, reject
       console.log(stdout);
       console.log('bz2 압축이 끝났습니다.');
       console.timeEnd('bz2');
-      resolve();
+      resolve('bz2 압축이 끝났습니다.');
     } else {
       console.timeEnd('bz2');
       reject(error);
@@ -95,4 +94,10 @@ const bz2comp = (bzippath, outputPath, filename) => new Promise((resolve, reject
   });
 });
 
-module.exports = { compTargz, compTar, checkSymlink, checkOutputDir, bz2comp };
+export default {
+  compTargz,
+  compTar,
+  checkSymlink,
+  checkOutputDir,
+  bz2comp,
+};

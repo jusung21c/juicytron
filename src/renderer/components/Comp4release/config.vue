@@ -1,7 +1,7 @@
 <template>
     <v-layout row justify-center>
         <v-dialog v-model="dialog" overflow hide-overlay transition="dialog-bottom-transition" max-width="1000px">
-            <v-btn slot="activator" color="primary" dark>설정</v-btn>
+            <v-btn slot="activator" color="green" light>설정</v-btn>
             <v-card>
                 <v-toolbar dark color="primary">
                     <v-btn icon dark @click.native="dialog = false">
@@ -171,7 +171,7 @@
       computedVersion: {
         get() {
           const regex = new RegExp(/[\d]{1,2}\.[\d]{1,2}\.[\d]{1,2}/, 'gm');
-          const version = this.computedFilename.match(regex);
+          const version = this.computedFilename.match(regex)[0];
           store.set('basic.version', version);
           this.$store.commit('setVersion', version);
           return version;
