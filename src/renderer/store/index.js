@@ -14,6 +14,7 @@ export default new Vuex.Store({
   state: {
     inputpath: store.get('basic.inputpath'),
     outputpath: store.get('basic.outputpath'),
+    bzippath: store.get('basic.bzippath'),
     nation: store.get('basic.nation'),
     dirname: store.get('basic.dirname'),
     filename: store.get('basic.filename'),
@@ -22,7 +23,6 @@ export default new Vuex.Store({
     mzusername: store.get('mz.username'),
     mzpassword: store.get('mz.password'),
     relativesympath: '../../space/vr_fixed/LPTE/BASE',
-    bzippath: '".\\GnuWin32\\bin\\bzip2.exe"',
     progressmessage: [],
   },
   getters: {
@@ -31,7 +31,19 @@ export default new Vuex.Store({
     getNation: state => state.nation,
     getDirname: state => state.dirname,
     getFilename: state => state.filename,
+    getNextFilename: (state) => {
+      const arr = state.version.split('.');
+      const patchVer = Number(arr[arr.length - 1]);
+      arr[arr.length - 1] = patchVer + 1;
+      return state.filename.replace(state.version, arr.join('.'));
+    },
     getVersion: state => state.version,
+    getNextVersion: (state) => {
+      const arr = state.version.split('.');
+      const patchVer = Number(arr[arr.length - 1]);
+      arr[arr.length - 1] = patchVer + 1;
+      return arr.join('.');
+    },
     getMzServerPath: state => state.mzserverpath,
     getMzUserName: state => state.mzusername,
     getMzPassword: state => state.mzpassword,
@@ -70,6 +82,9 @@ export default new Vuex.Store({
     },
     setMzPassword: (state, payload) => {
       state.mzpassword = payload;
+    },
+    setBzipPath: (state, payload) => {
+      state.bzippath = payload;
     },
     pushProgressMessage: (state, payload) => {
       state.progressmessage.push(payload);

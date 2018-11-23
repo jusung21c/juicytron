@@ -7,7 +7,7 @@
                 width="700"
         >
             <v-card
-                    color="primary"
+                    v-bind:style="{backgroundColor: color}"
                     dark
             >
                 <v-card-text>
@@ -15,6 +15,7 @@
                         {{me}}
                     </p>
                     <v-progress-linear
+                            v-if="progress"
                             indeterminate
                             color="white"
                             class="mb-0"
@@ -27,7 +28,7 @@
 
 <script>
   export default {
-    props: ['status', 'message'],
+    props: ['status', 'progress', 'message', 'color', 'isBtn'],
     data() {
       return {
         dialog: false,

@@ -10,7 +10,6 @@ const compTargz = (input, dest) => new Promise((resolve, reject) => {
   fs.readdir(input, (err) => {
     if (!err) {
       console.log(`${input} 압축을 시작합니다.`);
-      this.$store.commit('pushProgressMessage', `${input} 압축을 시작합니다.`);
       console.time('ct');
       targz.compress({
         src: input,

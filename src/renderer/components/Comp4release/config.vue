@@ -36,6 +36,11 @@
                             v-bind:description="`output 폴더를 선택해주세요. (예: C:\\Output)`"
                             @selectedPath="pullOutputPath"
                     ></PathSelector>
+                    <FileSelector
+                            v-bind:path="getBzipPath"
+                            v-bind:description="`Bzip.exe 경로를 설정해주세요.`"
+                            @selectedPath="pullBzipPath"
+                    ></FileSelector>
                 </v-flex>
                 <v-container grid-list-md text-xs-center>
                     <v-layout row wrap>
@@ -57,7 +62,7 @@
                         </v-flex>
                         <v-flex xs6>
                             <v-text-field
-                                    label="최종 패키징될 파일의 이름을 적어주세요. (예: vreu-5w-0.00.52})"
+                                    label="최종 패키징될 파일의 이름을 적어주세요. (예: vreu-5w-0.00.52)"
                                     v-model="computedFilename"
                                     :rules="blankrule"
                                     required
@@ -115,11 +120,13 @@
 
 <script>
   import PathSelector from '../General/PathSelector';
+  import FileSelector from '../General/FileSelector';
   import { mapGetters, mapMutations } from '../../../../node_modules/vuex';
   const Store = require('electron-store');
   const store = new Store();
   export default {
     components: {
+      FileSelector,
       PathSelector,
     },
     name: 'config',
@@ -140,6 +147,7 @@
       ...mapGetters([
         'getInputPath',
         'getOutputPath',
+        'getBzipPath',
       ]),
       computedNation: {
         get() {
@@ -217,6 +225,10 @@
       pullOutputPath(path) {
         store.set('basic.outputpath', path);
         this.$store.commit('setOutputPath', path);
+      },
+      pullBzipPath(path) {
+        store.set('basic.bzippath', path);
+        this.$store.commit('setBzipPath', path);
       },
     },
   };
