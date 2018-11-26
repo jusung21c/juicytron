@@ -31,19 +31,25 @@ export default new Vuex.Store({
     getNation: state => state.nation,
     getDirname: state => state.dirname,
     getFilename: state => state.filename,
-    getNextFilename: (state) => {
-      const arr = state.version.split('.');
-      const patchVer = Number(arr[arr.length - 1]);
-      arr[arr.length - 1] = patchVer + 1;
-      return state.filename.replace(state.version, arr.join('.'));
-    },
+    getNextFilename: ((state) => {
+      if (state.filename !== undefined) {
+        const arr = state.version.split('.');
+        const patchVer = Number(arr[arr.length - 1]);
+        arr[arr.length - 1] = patchVer + 1;
+        return state.filename.replace(state.version, arr.join('.'));
+      }
+      return '';
+    }),
     getVersion: state => state.version,
-    getNextVersion: (state) => {
-      const arr = state.version.split('.');
-      const patchVer = Number(arr[arr.length - 1]);
-      arr[arr.length - 1] = patchVer + 1;
-      return arr.join('.');
-    },
+    getNextVersion: ((state) => {
+      if (state.version !== undefined) {
+        const arr = state.version.split('.');
+        const patchVer = Number(arr[arr.length - 1]);
+        arr[arr.length - 1] = patchVer + 1;
+        return arr.join('.');
+      }
+      return '';
+    }),
     getMzServerPath: state => state.mzserverpath,
     getMzUserName: state => state.mzusername,
     getMzPassword: state => state.mzpassword,

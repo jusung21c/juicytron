@@ -19,6 +19,9 @@
                                 <span>OutputPath : {{getOutputPath}}</span><br>
                                 <span>향지 : {{getNation}}</span><br>
                                 <span>현재 설정 버전 : {{getVersion}}</span><br>
+                                <span>getVrPath : {{getVrPath}}</span><br>
+                                <span>getVrFiexedPath : {{getVrFiexedPath}}</span><br>
+                                <span>getOutputDirnamePath : {{getOutputDirnamePath}}</span><br>
                             </div>
                         </v-card-title>
                         <UserConfig/>
@@ -33,14 +36,16 @@
                             </div>
                         </v-card-title>
                         <v-card-actions>
-                            <v-btn  :disabled="dialog" :loading="dialog"
-                                    class="white--text" color="purple darken-2"
-                                    @click="progressDialogOn"
-                            >버전 올리고 패킹({{getNextFilename}})</v-btn>
-                            <v-btn  :disabled="dialog" :loading="dialog"
-                                    class="white--text" color="purple darken-2"
-                                    @click="progressDialogOn"
-                            >현재 설정 버전으로 패킹({{getFilename}})</v-btn>
+                            <v-btn :disabled="dialog" :loading="dialog"
+                                   class="white--text" color="purple darken-2"
+                                   @click="progressDialogOn"
+                            >버전 올리고 패킹({{getNextFilename}})
+                            </v-btn>
+                            <v-btn :disabled="dialog" :loading="dialog"
+                                   class="white--text" color="purple darken-2"
+                                   @click="progressDialogOn"
+                            >현재 설정 버전으로 패킹({{getFilename}})
+                            </v-btn>
                             <v-btn class="white--text" color="purple darken-2" @click="progressDialogOff">off</v-btn>
                             <v-btn class="white--text" color="purple darken-2" @click="fullComp">targz</v-btn>
                             <v-btn class="white--text" color="purple darken-2" @click="test">targz</v-btn>
@@ -83,6 +88,7 @@
   const isSymbolicLink = require('is-symbolic-link');
   const tar = require('tar');
   const convert = require('convert-seconds');
+  const chilkat = require('chilkat_electron_2_0_win32');
 
   export default {
     name: 'comp4release',
@@ -136,14 +142,21 @@
       // 고정부,가변부를 targz 로 압축한다.
       fullComp() {
         this.progressDialogOn();
-        this.pushProgressMessage('패키지 시작');
+        this.pushProgressMessage('패키징 시작');
         this.checkOutputDir(this.getOutputDirnamePath)
           .then(() => this.checkSymlink(this.getSympath, this.getRelativeSymPath))
-          .then(() => this.compTargz(this.getVrPath, path.join(this.getOutputDirnamePath, 'mango-vr.tar.gz')))
-          .then(() => this.compTargz(this.getVrFiexedPath, path.join(this.getOutputDirnamePath, 'mango-vr_fixed.tar.gz')))
-          .then(() => this.compTargz(this.getOutputDirnamePath, path.join(this.getOutputPath, `${this.getFilename}.tar`)))
-          .then(() => this.compTar(this.getOutputPath, this.getFilename, this.getDirname))
-          .then(() => this.bz2comp(this.getBzipPath, this.getOutputPath, this.getFilename))
+          .then(() => this.compTar2(this.getVrPath, this.getOutputDirnamePath, 'mango-vr.tar'))
+          .then(() => this.compTar2(this.getVrFiexedPath, this.getOutputDirnamePath, 'mango-vr_fixed.tar'))
+          // .then(() => this.compTargz('tar', this.getVrPath,
+          // path.join(this.getOutputDirnamePath, 'mango-vr.tar')))
+          // .then(() => this.compTargz('tar', this.getVrFiexedPath,
+          // path.join(this.getOutputDirnamePath, 'mango-vr_fixed.tar')))
+          // .then(() => this.compTargz(this.getOutputDirnamePath,
+          // path.join(this.getOutputPath, `${this.getFilename}.tar`)))
+          // .then(() => this.compTar(this.getOutputPath, this.getFilename, this.getDirname))
+          // .then(() => this.bz2comp(this.getBzipPath, this.getOutputPath, this.getFilename))
+          .then(() => this.tarbz2(this.getOutputDirnamePath,
+            path.join(this.getOutputPath, `${this.getFilename}.tar.bz2`)))
           .then((msg) => {
             console.log(msg);
             this.progress = false;
@@ -154,36 +167,56 @@
       versioning(version) {
         this.$store.commit('setVersion', version);
       },
-      compTargz(input, dest) {
+      compTargz(mode, input, dest) {
         return new Promise((resolve, reject) => {
-          fs.readdir(input, (err) => {
-            if (!err) {
-              console.log(`${input} 압축을 시작합니다.`);
-              this.pushProgressMessage(`${input} 압축을 시작합니다.`);
-              const startTime = performance.now();
-              targz.compress({
-                src: input,
-                dest,
-              }, (err) => {
-                if (err) {
-                  console.error(err);
-                  reject(err);
-                }
-                const time = (performance.now() - startTime) / 1000;
-                this.pushProgressMessage(`압축이 끝났습니다.
+          if (mode === 'targz') {
+            fs.readdir(input, (err) => {
+              if (!err) {
+                console.log(`${input} 압축을 시작합니다.`);
+                this.pushProgressMessage(`${input} 압축을 시작합니다.`);
+                const startTime = performance.now();
+                targz.compress({
+                  src: input,
+                  dest,
+                }, (err) => {
+                  if (err) {
+                    console.error(err);
+                    reject(err);
+                  }
+                  const time = (performance.now() - startTime) / 1000;
+                  this.pushProgressMessage(`압축이 끝났습니다.
                 (${convert(time).hours}시간
                 ${convert(time).minutes}분
                 ${convert(time).seconds}초 소요)`);
-                resolve();
-              });
-            } else {
-              reject(`${input} 경로가 존재하지 않습니다.`);
-              console.timeEnd(`${input}`);
+                  resolve();
+                });
+              } else {
+                reject(`${input} 경로가 존재하지 않습니다.`);
+                console.timeEnd(`${input}`);
+              }
+            });
+          }
+          if (mode === 'tar') {
+            try {
+              tar.c({ z: false, f: dest, cwd: input }, [`${input}`]);
+              resolve();
+            } catch (error) {
+              reject(error);
             }
-          });
+          }
         });
       },
 
+      compTar2(targetdirname, outputpath, filename) {
+        this.pushProgressMessage(`${filename} Tar 아카이빙 시작`);
+        return new Promise((resolve, reject) => {
+          try {
+            resolve(tar.c({ z: false, f: path.join(outputpath, filename), cwd: targetdirname }, ['.']));
+          } catch (error) {
+            reject(error);
+          }
+        });
+      },
       compTar(outputpath, filename, dirname) {
         return new Promise((resolve, reject) => {
           try {
@@ -261,6 +294,34 @@
               reject(error);
             }
           });
+        });
+      },
+
+      tarbz2(inputpath, outputpath) {
+        this.pushProgressMessage(`${inputpath} bzip2 압축 시작`);
+        return new Promise((resolve, reject) => {
+          console.log('tarbz2 진입');
+          const tar = new chilkat.Tar();
+          //  Any string automatically begins a fully-functional 30-day trial.
+          let success = tar.UnlockComponent('hello');
+          if (success !== true) {
+            console.log(tar.LastErrorText);
+            return;
+          }
+          tar.WriteFormat = 'gnu';
+
+          success = tar.AddDirRoot(inputpath);
+          if (success !== true) {
+            console.log(tar.LastErrorText);
+            reject(tar.LastErrorText);
+          }
+          success = tar.WriteTarBz2(outputpath);
+          if (success !== true) {
+            console.log(tar.LastErrorText);
+            reject(tar.LastErrorText);
+          }
+          console.log('Success.');
+          resolve();
         });
       },
       test() {
